@@ -1,0 +1,49 @@
+name: 🐛 Bug report
+description: Something sounds wrong, looks wrong or doesn't work.
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What did you do, what did you expect, and what happened instead?
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - App volume
+        - Browser tab volume
+        - Output devices or batteries
+        - Ducking during calls
+        - Panel or menu bar
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: apps
+    attributes:
+      label: Apps or browsers involved
+      placeholder: e.g. Spotify, Helium 0.6, Safari 27
+  - type: input
+    id: macos
+    attributes:
+      label: macOS version
+      placeholder: e.g. macOS 27.0 on an M3 MacBook Pro
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Mezcla version or commit
+      placeholder: e.g. v0.1.0 or 530f9ec
+  - type: textarea
+    id: selftest
+    attributes:
+      label: Self-test output
+      description: |
+        Optional but very helpful. Run this and paste the result (it lists audio devices and processes, nothing else):
+        `/Applications/Mezcla.app/Contents/MacOS/Mezcla --selftest`
+      render: text

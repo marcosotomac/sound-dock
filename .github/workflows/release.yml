@@ -1,0 +1,46 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing tag to release, e.g. v0.1.0
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build and publish
+    runs-on: macos-26
+    timeout-minutes: 30
+    env:
+      TAG: ${{ inputs.tag || github.ref_name }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TAG }}
+
+      - name: Test
+        run: swift test
+
+      - name: Build Mezcla.app
+        run: scripts/build-app.sh
+
+      - name: Package
+        run: |
+          ditto -c -k --sequesterRsrc --keepParent build/Mezcla.app "Mezcla-$TAG.zip"
+          shasum -a 256 "Mezcla-$TAG.zip" > "Mezcla-$TAG.zip.sha256"
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" "Mezcla-$TAG.zip" "Mezcla-$TAG.zip.sha256" --clobber
+          else
+            gh release create "$TAG" "Mezcla-$TAG.zip" "Mezcla-$TAG.zip.sha256" --title "Mezcla $TAG" --generate-notes
+          fi

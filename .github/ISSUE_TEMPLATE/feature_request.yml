@@ -1,0 +1,19 @@
+name: ✨ Feature request
+description: An idea that would make Mezcla more useful.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What would you like to do?
+      description: Describe the situation, not only the solution. What gets in your way today?
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: How could Mezcla help?
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Anything you use today instead?

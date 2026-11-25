@@ -10,10 +10,18 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/marcosotomac/sound-dock/releases/latest"><b>Download</b></a> ·
+  <a href="#install">Install</a> ·
+  <a href="#how-it-works">How it works</a> ·
+  <a href="CONTRIBUTING.md">Contribute</a>
+</p>
+
+<p align="center">
   <img alt="macOS 14.2+" src="https://img.shields.io/badge/macOS-14.2%2B-black?logo=apple">
   <img alt="Swift 6" src="https://img.shields.io/badge/Swift-6-F05138?logo=swift&logoColor=white">
-  <img alt="Size" src="https://img.shields.io/badge/app-1.3%20MB-orange">
-  <img alt="Tests" src="https://img.shields.io/badge/tests-65%20passing-brightgreen">
+  <a href="https://github.com/marcosotomac/sound-dock/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/marcosotomac/sound-dock/actions/workflows/ci.yml/badge.svg"></a>
+  <a href="https://github.com/marcosotomac/sound-dock/releases/latest"><img alt="Latest release" src="https://img.shields.io/github/v/release/marcosotomac/sound-dock?label=release"></a>
+  <a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/license-MIT-blue"></a>
 </p>
 
 ## What it does
@@ -74,7 +82,18 @@ the volume keys, Control Center, output changes, sleep and wake. Audio never lea
 > Requires macOS 14.2 or later and the **System Audio Recording** permission (System Settings › Privacy &
 > Security › Screen & System Audio Recording).
 
-## Use
+## Install
+
+1. Download `Mezcla-vX.Y.Z.zip` from the [latest release](https://github.com/marcosotomac/sound-dock/releases/latest),
+   unzip it and move **Mezcla.app** to `/Applications`.
+2. Open it. Releases are not notarized yet, so macOS blocks the first launch: go to System Settings › Privacy
+   & Security and click **Open Anyway** (or run `xattr -dr com.apple.quarantine /Applications/Mezcla.app`).
+3. Click the Mezcla icon in the menu bar and allow **System Audio Recording** when asked.
+4. Optional, for per-tab volume: Settings › Per-Tab Volume in Browsers… walks you through the extension.
+
+Or build it yourself, as below.
+
+## Build from source
 
 ```sh
 scripts/build-app.sh          # builds build/Mezcla.app (release, signed)
@@ -205,3 +224,7 @@ exact, as the kernel tests verify.
   keeps the permission across builds.
 - Two private system functions are resolved at runtime, each with a fallback: TCC, to read the capture
   permission, and `responsibility_get_pid_responsible_for_pid`, to group helper processes.
+
+## License
+
+[MIT](LICENSE) © 2026 Marco Soto Maceda. Contributions are welcome: see [CONTRIBUTING.md](CONTRIBUTING.md).
