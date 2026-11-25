@@ -1,0 +1,55 @@
+{
+  "manifest_version": 3,
+  "name": "Mezcla: Per-Tab Volume",
+  "short_name": "Mezcla",
+  "version": "1.0.0",
+  "description": "Lets Mezcla set the volume of each browser tab separately.",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxfBea+CraJ1qbNwn60BkvQzDzXAosWjCca7/IeAKS3y7v3iYUOIAR0xbhND42Vp9ZpdV8mPny44a94kM4kbZ0SUq+M0OY97sdnbDjqZmDZ3kp2FU4szGdgXzHRJIzj2dTyhOTX6BPmddttsMmnwJUfnDCVUFCbUdWx+WsNoPV9cbtkZAoC/M1IkuuEoj9/RHTZceFVSeTQXWnBIQha9TojXBvV5D+8czErHJ8I0dL2YuBXTFcRpyn7lBX8JICshO+9KAYLtY5e/PRDwrkt+DkRCKg33Or+ztQdf9tzeGfITMUv1gXKLXFDN7+NbWZ8VemprAQ+l9B6Idjn2VwDrDmwIDAQAB",
+  "minimum_chrome_version": "111",
+  "permissions": [
+    "nativeMessaging",
+    "tabs",
+    "storage",
+    "favicon",
+    "scripting"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "page-volume.js"
+      ],
+      "run_at": "document_start",
+      "all_frames": true,
+      "match_about_blank": true,
+      "match_origin_as_fallback": true,
+      "world": "MAIN"
+    },
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "page-bridge.js"
+      ],
+      "run_at": "document_start",
+      "all_frames": true,
+      "match_about_blank": true,
+      "match_origin_as_fallback": true
+    }
+  ],
+  "icons": {
+    "16": "icons/16.png",
+    "32": "icons/32.png",
+    "48": "icons/48.png",
+    "128": "icons/128.png"
+  }
+}
