@@ -8,7 +8,7 @@ struct PanelFooter: View {
 
         HStack(spacing: 0) {
             Menu {
-                Toggle("Open at Login", isOn: Binding(get: { model.launchesAtLogin }, set: model.setLaunchesAtLogin))
+                Toggle("Open at Login", isOn: Binding(get: { model.launchesAtLogin }, set: { model.setLaunchesAtLogin($0) }))
                 Toggle("Allow Boost up to 150%", isOn: $model.preferences.allowsBoost)
                 Toggle("Show Apps That Aren’t Playing", isOn: $model.preferences.showsIdleApps)
                 Divider()
