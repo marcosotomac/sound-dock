@@ -63,7 +63,7 @@ struct AppVolumeRow: View {
             }
             if model.isBrowser(app) {
                 Divider()
-                Button("Control Each Tab Separately…", action: model.showBrowserSetup)
+                Button("Control Each Tab Separately…") { model.showBrowserSetup(for: app) }
             }
         }
     }

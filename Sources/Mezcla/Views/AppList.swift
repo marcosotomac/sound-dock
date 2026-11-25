@@ -65,7 +65,7 @@ struct AppList: View {
                     .transition(.opacity)
             }
             if tabs.isEmpty, model.suggestsTabControl(for: app) {
-                TabControlSuggestion()
+                TabControlSuggestion(browser: app)
                     .transition(.opacity)
             }
         }

@@ -39,7 +39,8 @@ struct SystemBluetoothDetails: BluetoothDetailsProviding {
 /// Navigation the panel cannot do by itself, like leaving the panel to show a window.
 @MainActor
 protocol PanelRouting: AnyObject {
-    func showBrowserSetup()
+    /// The extension guide, for one browser (`nil` covers them all).
+    func showBrowserSetup(for browser: AudioApp?)
     /// A brief card under the menu bar when headphones or speakers connect.
     func showConnected(_ device: OutputDevice, symbol: String, battery: BluetoothDetails.Battery?)
 }

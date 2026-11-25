@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Mezcla: Per-Tab Volume",
   "short_name": "Mezcla",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Lets Mezcla set the volume of each Safari tab separately.",
   "permissions": ["nativeMessaging", "tabs", "<all_urls>"],
   "background": { "scripts": ["background-safari.js"], "persistent": true },

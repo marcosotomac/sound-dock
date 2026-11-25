@@ -4,7 +4,8 @@
 // - <audio>/<video>, including detached `new Audio()`: the volume the page sets is remembered and the
 //   element plays at `pageVolume × min(gain, 1)`. Reading `volume` still returns the page's own value, so
 //   the site's volume slider keeps working and nothing it saves is affected.
-// - Above 100 %, eligible elements are routed through Web Audio: gain, then a limiter so peaks never clip.
+// - Above 100 %, eligible elements are routed through Web Audio: gain, then a limiter so peaks never clip
+//   and quiet audio is not changed.
 //   Only sources Web Audio can read (same origin, blob:/data:, CORS, live streams) and only once audio is
 //   allowed to start, so boosting can never silence a video.
 // - Web Audio (games, players, calls): connections to a context's destination go through one gain node
@@ -20,8 +21,30 @@
 
   const connect = AudioNode.prototype.connect;
   const disconnect = AudioNode.prototype.disconnect;
-  const makeLimiter = (context) =>
-    new DynamicsCompressorNode(context, { threshold: -1.5, knee: 0, ratio: 20, attack: 0.002, release: 0.1 });
+  // Limiter for boosted audio: compressor → undo its automatic makeup gain → soft clipper.
+  // The compressor alone lets a loud, boosted track peak above 0 dBFS, and its makeup gain (fixed by the
+  // spec at 0.6 × the reduction at 0 dBFS) would also lift quiet audio by 0.86 dB.
+  const LIMITER = { threshold: -1.5, knee: 0, ratio: 20, attack: 0.002, release: 0.1 };
+  const MAKEUP_DB = 0.6 * -(LIMITER.threshold - LIMITER.threshold / LIMITER.ratio);
+  // Same curve as the native soft clipper: transparent below -1.5 dBFS, bending towards -0.3 dBFS.
+  // Inputs beyond ±1 hold the curve's last value, about -0.46 dBFS.
+  const SAFETY_CURVE = (() => {
+    const threshold = 0.841395142, knee = 0.966050879 - threshold, points = 2049;
+    const curve = new Float32Array(points);
+    for (let i = 0; i < points; i++) {
+      const x = (i / (points - 1)) * 2 - 1, magnitude = Math.abs(x);
+      curve[i] = magnitude <= threshold ? x : Math.sign(x) * (threshold + knee * Math.tanh((magnitude - threshold) / knee));
+    }
+    return curve;
+  })();
+  const makeLimiter = (context) => {
+    const input = new DynamicsCompressorNode(context, LIMITER);
+    const makeup = new GainNode(context, { gain: 10 ** (-MAKEUP_DB / 20) });
+    const output = new WaveShaperNode(context, { curve: SAFETY_CURVE });
+    connect.call(input, makeup);
+    connect.call(makeup, output);
+    return { input, output };
+  };
 
   // MARK: Media elements
 
@@ -111,8 +134,8 @@
     }
     const input = new GainNode(context, { gain: Math.max(gain, 1) }); // Below 100 % the element's own volume does the work.
     const limiter = makeLimiter(context);
-    connect.call(input, limiter);
-    connect.call(limiter, context.destination);
+    connect.call(input, limiter.input);
+    connect.call(limiter.output, context.destination);
     boostGraph = { context, input };
     return input;
   };
@@ -159,8 +182,8 @@
     try {
       nodes.limiter = makeLimiter(context);
       disconnect.call(nodes.input);
-      connect.call(nodes.input, nodes.limiter);
-      connect.call(nodes.limiter, context.destination);
+      connect.call(nodes.input, nodes.limiter.input);
+      connect.call(nodes.limiter.output, context.destination);
     } catch {}
   };
 

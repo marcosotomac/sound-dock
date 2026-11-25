@@ -20,7 +20,7 @@ struct PanelFooter: View {
                 }
                 .disabled(!model.preferences.ducksDuringCalls)
                 Divider()
-                Button("Per-Tab Volume in Browsers…", action: model.showBrowserSetup)
+                Button("Per-Tab Volume in Browsers…") { model.showBrowserSetup() }
                 Divider()
                 Button("Reset All Apps", action: model.resetAll)
                     .disabled(!model.hasCustomVolumes)

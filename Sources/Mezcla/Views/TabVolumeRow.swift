@@ -126,13 +126,14 @@ private struct FaviconMuteButton: View {
 /// Shown under a playing browser without the extension: one click away from per-tab control.
 struct TabControlSuggestion: View {
     @Environment(MixerViewModel.self) private var model
+    let browser: AudioApp
 
     var body: some View {
         HStack(spacing: PanelStyle.columnSpacing) {
             HierarchyGuide(isLast: true)
                 .frame(width: PanelStyle.iconSize)
 
-            Button(action: model.showBrowserSetup) {
+            Button { model.showBrowserSetup(for: browser) } label: {
                 HoverLabel {
                     Label("Control each tab separately…", systemImage: "puzzlepiece.extension")
                         .labelStyle(CompactLabelStyle())

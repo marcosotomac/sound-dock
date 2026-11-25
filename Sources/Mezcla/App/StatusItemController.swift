@@ -23,9 +23,9 @@ final class StatusItemController: NSObject, PanelRouting {
         configureButton()
     }
 
-    func showBrowserSetup() {
+    func showBrowserSetup(for browser: AudioApp?) {
         close()
-        BrowserSetupGuide.present()
+        BrowserSetupGuide.present(for: browser)
     }
 
     func showConnected(_ device: OutputDevice, symbol: String, battery: BluetoothDetails.Battery?) {

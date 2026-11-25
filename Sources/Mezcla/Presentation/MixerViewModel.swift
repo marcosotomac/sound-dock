@@ -294,8 +294,8 @@ final class MixerViewModel {
         }
     }
 
-    func showBrowserSetup() {
-        router?.showBrowserSetup()
+    func showBrowserSetup(for browser: AudioApp? = nil) {
+        router?.showBrowserSetup(for: browser)
     }
 
     func hideTabControlSuggestion() {
